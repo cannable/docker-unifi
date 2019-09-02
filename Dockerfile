@@ -25,12 +25,12 @@ RUN ["/bin/bash", "/data/build-overrides.sh"]
 # UDP 	10001 	Port used for device discovery
 # UDP 	1900 	Port used for "Make controller discoverable on L2 network" in controller settings.
 
-EXPOSE "8080/tcp" \
+EXPOSE "3478/udp" \
+       "8080/tcp" \
        "8443/tcp" \
        "8880/tcp" \
        "8843/tcp" \
        "6789/tcp" \
-       "27117/tcp" \
        "5656-5699/udp" \
        "10001/udp" \
        "1900/udp"
