@@ -1,5 +1,7 @@
 FROM debian:stretch
 
+ARG UNIFI_VERSION
+
 ENV NAME unifi
 
 VOLUME ["/usr/lib/unifi/data", \
