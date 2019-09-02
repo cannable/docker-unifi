@@ -3,6 +3,8 @@ FROM debian:stretch
 ENV NAME unifi
 
 COPY ["./data", "/data"]
+COPY ["./overrides", "/data/overrides"]
+
 RUN ["/bin/bash", "/data/build.sh"]
 
 # Ports stolen from here:

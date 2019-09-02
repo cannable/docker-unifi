@@ -4,9 +4,8 @@
 # Unifi Controller - Install Service Definitions
 # ------------------------------------------------------------------------------
 
-echo Installing services...
-cp -R /data/init/* /etc/services.d/
-chown -R root:root /etc/services.d/*
-chmod u+x /etc/services.d/unifi/*
+echo Applying build-time file overrides...
+cp -R /data/overrides/root/* /
+rm -rf /data/overrides
 
 echo Done

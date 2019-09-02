@@ -8,5 +8,5 @@
 source /data/build-base.sh
 source /data/build-unifi.sh
 source /data/build-s6.sh
-source /data/build-services.sh
+source /data/build-overrides.sh
 source /data/build-cleanup.sh
