@@ -4,15 +4,8 @@
 # Unifi Controller - Init Script
 # ------------------------------------------------------------------------------
 
-mkdir \
-    /usr/lib/unifi/data \
-    /usr/lib/unifi/logs \
-    /usr/lib/unifi/run
-
-chown unifi:unifi \
-    /usr/lib/unifi/data \
-    /usr/lib/unifi/logs \
-    /usr/lib/unifi/run
+mkdir /usr/lib/unifi/run
+chown unifi:unifi /usr/lib/unifi/run
 
 s6-setuidgid unifi java \
     -Djava.awt.headless=true \
