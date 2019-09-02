@@ -2,10 +2,14 @@ FROM debian:stretch
 
 ENV NAME unifi
 
-COPY ["./data", "/data"]
-COPY ["./overrides", "/data/overrides"]
+VOLUME ["/usr/lib/unifi/data", \
+        "/usr/lib/unifi/logs"]
 
+COPY ["./data", "/data"]
 RUN ["/bin/bash", "/data/build.sh"]
+
+COPY ["./overrides", "/data/overrides"]
+RUN ["/bin/bash", "/data/build-overrides.sh"]
 
 # Ports stolen from here:
 # https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used
