@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# ------------------------------------------------------------------------------
+# Unifi Controller - Init Script
+# ------------------------------------------------------------------------------
+
+mkdir \
+    /usr/lib/unifi/data \
+    /usr/lib/unifi/logs \
+    /usr/lib/unifi/run
+
+chown unifi:unifi \
+    /usr/lib/unifi/data \
+    /usr/lib/unifi/logs \
+    /usr/lib/unifi/run
+
+s6-setuidgid unifi java \
+    -Djava.awt.headless=true \
+    -Dfile.encoding=UTF-8 \
+    -jar /usr/lib/unifi/lib/ace.jar \
+    start
