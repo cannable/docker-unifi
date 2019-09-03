@@ -5,14 +5,17 @@
 # ------------------------------------------------------------------------------
 
 version=v1.21.8.0
-url=https://github.com/just-containers/s6-overlay/releases/download/${version}/s6-overlay-amd64.tar.gz
-filename=/tmp/s6-overlay-amd64.tar.gz
+arch=$(dpkg --print-architecture)
+archive="s6-overlay-${arch}.tar.gz"
+url="https://github.com/just-containers/s6-overlay/releases/download/${version}/${archive}"
+filename="/tmp/${archive}"
 
-echo Installing s6-overlay...
 
+echo Downloading $archive from $url...
 curl -L -o "${filename}" "${url}"
 curl -L -o "${filename}.sig" "${url}.sig"
 curl https://keybase.io/justcontainers/key.asc | gpg --import
+
 
 # Check the download signature
 echo Checking tarball signature...
@@ -30,7 +33,9 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-tar xpzf /tmp/s6-overlay-amd64.tar.gz -C /
-rm -f /tmp/s6-overlay-amd64.tar.gz*
+
+echo Installing s6-overlay...
+tar xpzf "${filename}" -C /
+rm -f "${filename}*"
 
 echo s6-overlay installed.
