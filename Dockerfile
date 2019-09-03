@@ -1,6 +1,7 @@
 FROM debian:stretch
 
 ARG UNIFI_VERSION
+ARG S6_VERSION=1.22.1.0
 
 ENV NAME unifi
 

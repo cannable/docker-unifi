@@ -4,7 +4,7 @@
 # Unifi - Install s6-overlay
 # ------------------------------------------------------------------------------
 
-version=v1.21.8.0
+version="v${S6_VERSION}"
 arch=$(dpkg --print-architecture)
 archive="s6-overlay-${arch}.tar.gz"
 url="https://github.com/just-containers/s6-overlay/releases/download/${version}/${archive}"
