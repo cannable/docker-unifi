@@ -8,7 +8,11 @@ VOLUME ["/usr/lib/unifi/data", \
         "/usr/lib/unifi/logs"]
 
 COPY ["./data", "/data"]
-RUN ["/bin/bash", "/data/build.sh"]
+
+RUN ["/bin/bash", "/data/build-base.sh"]
+RUN ["/bin/bash", "/data/build-unifi.sh"]
+RUN ["/bin/bash", "/data/build-cleanup.sh"]
+RUN ["/bin/bash", "/data/build-s6.sh"]
 
 COPY ["./overrides", "/data/overrides"]
 RUN ["/bin/bash", "/data/build-overrides.sh"]
