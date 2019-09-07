@@ -6,6 +6,14 @@
 
 version="v${S6_VERSION}"
 arch=$(dpkg --print-architecture)
+
+
+# Debian's designation for aarch64 is arm64, so we need to tweak this to fit
+# what s6-overlay uses, otherwise the download fails
+if [[ "${arch}" = "arm64" ]]; then
+    arch="aarch64"
+fi
+
 archive="s6-overlay-${arch}.tar.gz"
 url="https://github.com/just-containers/s6-overlay/releases/download/${version}/${archive}"
 filename="/tmp/${archive}"
