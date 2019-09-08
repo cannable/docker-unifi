@@ -9,6 +9,6 @@ fi
 ARCH=$1
 VERSION=$2
 
-./ver_docker_build.sh ${ARCH} ${VERSION}
+"$(dirname $0)/ver_docker_build.sh" ${ARCH} ${VERSION}
 
 docker tag "cannable/unifi:${ARCH}-${VERSION}" "cannable/unifi:${ARCH}-latest"
