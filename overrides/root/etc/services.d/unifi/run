@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/with-contenv /bin/bash
 
 # ------------------------------------------------------------------------------
 # Unifi Controller - Init Script
@@ -10,5 +10,6 @@ chown unifi:unifi /usr/lib/unifi/run
 s6-setuidgid unifi java \
     -Djava.awt.headless=true \
     -Dfile.encoding=UTF-8 \
+    "-Xmx${JVM_MAXHEAP}" \
     -jar /usr/lib/unifi/lib/ace.jar \
     start

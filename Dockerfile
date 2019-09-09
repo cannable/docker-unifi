@@ -4,6 +4,7 @@ ARG UNIFI_VERSION
 ARG S6_VERSION=1.22.1.0
 
 ENV NAME unifi
+ENV JVM_MAXHEAP=1024m
 
 VOLUME ["/usr/lib/unifi/data", \
         "/usr/lib/unifi/logs"]
