@@ -13,4 +13,4 @@ docker manifest create cannable/unifi:${VERSION} \
     cannable/unifi:amd64-${VERSION} \
     cannable/unifi:arm64-${VERSION}
 
-docker manifest push cannable/unifi:${VERSION}
+docker manifest push --purge cannable/unifi:${VERSION}
