@@ -13,6 +13,7 @@ apt-get --no-install-recommends -y install \
 	openjdk-8-jre-headless \
 	procps \
 	less \
+	nvi \
 	gnupg
 
 
