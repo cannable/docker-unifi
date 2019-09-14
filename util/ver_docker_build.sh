@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ $# -ne 2 ]]; then
     echo ver_docker_build.sh ARCH VERSION
