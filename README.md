@@ -42,3 +42,5 @@ There are two defined in the Dockerfile. You should probably redirect these:
 ## Other Stuff
 
 You should consider running this container on either a macvlan or ipvlan network. This is how I run this container. Most of the required ports are exposed by default, but because I don't test all functionality in my environment, I can't guarantee something isn't horribly broken somewhere.
+
+There's room for improvement in a number of areas in this container. Most notably, logging is a bit of a mess (in that I made no effort to get it working properly). Unifi craps out trying to write log files and mongodb could use some rotation set up. Consider that the largest TODO item.
