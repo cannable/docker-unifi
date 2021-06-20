@@ -10,9 +10,18 @@ I build images for three architectures:
 | -------- | ---------- |
 | amd64 | amd64 |
 | aarch64 | arm64 |
-| ARMv7 | arm |
+| ARMv7 | arm * |
 
-Each platform's images are tagged with the convention prefix-version, so arm64-5.11.50 would be the aarch64 build for the v5.11.50 controller. Manifests are built for each version so, if you are just pulling this with the intention to run it, you can just pull cannable/unifi:5.11.50, or latest.
+Each platform's images are tagged with the convention prefix-version, so arm64-6.2.25 would be the aarch64 build for the v6.2.25 controller. Manifests are built for each version so, if you are just pulling this with the intention to run it, you can just pull cannable/unifi:6.2.25, or latest.
+
+* NOTE: 32-bit ARM builds are broken right now.
+## Old Tags/Images
+
+I ended up doing a large refactoring of how this container works and how I build images. The first thing was to ditch s6 because I wasn't actually using it for anything and it was adding unnecessary complexity. Besides, I'd rather have docker get stderr/stdout from java. Oh, and I switched from Stretch to Ubuntu because 18.04 has a more recent version of mongodb.
+
+The other major thing is why I added this section - I am building these with buildah now. Due to a number of things, including some general laziness on my end, the tag prefix for 32-bit arm has changed from "armhf" to just "arm". I've also managed to break the build on that platform, so... yeah.
+
+I run this image off of a Pi running Photon and build these on an amd64 box, so I kind of lack a "proper" environment to test that arch. Mongodb uses a different DB engine too and switching to 64 bit is "interesting" (if you happen to do that, the path of least resistance is to save a backup from the Maintenance area in the Unifi console, nuke your container, then start a new 64-bit one up and restore the backup). It's possible some older builds are also broken and I didn't spot it. I probably should make my build scripts bail if something goes wrong in apt land.
 
 ## Run-Time Configuration
 
@@ -27,10 +36,6 @@ Set this to change the Xmx value used to start Unifi. Defaults to 1024m (which i
 Define this to install a specific version of the controller. The latest version provided by Ubiquiti's APT repo is installed if this argument is empty. When you define this, the deb archive will be downloaded from Ubiquiti's site.
 
 NOTE: You must explicity pass a version number if building on aarch64 (same goes for any odd-ball platforms UBNT doesn't directly support). Ubiquiti's APT repo does not have packages or an index for this platform, even though the package we install is marked as noarch.
-
-**S6_VERSION**
-
-This package uses s6-overlay from just-containers (<https://github.com/just-containers/s6-overlay>). There's a default version defined in the Dockerfile that will be bumped when/if I remember. If you want a specific version, pass this argument.
 
 ## Volumes
 
