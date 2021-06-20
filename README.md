@@ -17,7 +17,7 @@ Each platform's images are tagged with the convention prefix-version, so arm64-6
 * NOTE: 32-bit ARM builds are broken right now.
 ## Old Tags/Images
 
-I ended up doing a large refactoring of how this container works and how I build images. The first thing was to ditch s6 because I wasn't actually using it for anything and it was adding unnecessary complexity. Besides, I'd rather have docker get stderr/stdout from java. Oh, and I switched from Stretch to Ubuntu because 18.04 has a more recent version of mongodb.
+I ended up doing a large refactoring of how this container works and how I build images. The first thing was to ditch s6 because I wasn't actually using it for anything and it was adding unnecessary complexity. Besides, I'd rather have docker get stderr/stdout from java.
 
 The other major thing is why I added this section - I am building these with buildah now. Due to a number of things, including some general laziness on my end, the tag prefix for 32-bit arm has changed from "armhf" to just "arm". I've also managed to break the build on that platform, so... yeah.
 
