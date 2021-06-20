@@ -10,7 +10,7 @@ I build images for three architectures:
 | -------- | ---------- |
 | amd64 | amd64 |
 | aarch64 | arm64 |
-| ARMv7 | armhf |
+| ARMv7 | arm |
 
 Each platform's images are tagged with the convention prefix-version, so arm64-5.11.50 would be the aarch64 build for the v5.11.50 controller. Manifests are built for each version so, if you are just pulling this with the intention to run it, you can just pull cannable/unifi:5.11.50, or latest.
 
