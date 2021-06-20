@@ -4,7 +4,7 @@ This is what it sounds like - the Unifi Controller in a Docker container.
 
 ## Heads Up - Mongodb 3.6
 
-In the event I am not the only one using this image, you will need to work around some annoyances I am creating. I am now building these images off of Ubuntu 18.04, which has mongodb 3.6.x (versus the 3.2.x in Debian Stretch). The reason is simple - 3.2 isn't supported by the main project anymore, and Ubiquity supports 3.6 now.
+In the event I am not the only one using this image, you will need to work around some annoyances I am creating. I am now building these images off of Ubuntu 18.04, which has mongodb 3.6.x (versus the 3.2.x in Debian Stretch). The reason is simple - 3.2 isn't supported by the main project anymore, and Ubiquiti supports 3.6 now.
 
 Starting with builds after 6.2.25, you're likely going to have issues doing an in-place upgrade (it exploded for me when I tested it, for example). I have ideas as to why, and maybe how to fix them properly, but here's the easiest workaround: do a manual backup first.
 
@@ -32,6 +32,7 @@ I build images for three architectures:
 Each platform's images are tagged with the convention prefix-version, so arm64-6.2.25 would be the aarch64 build for the v6.2.25 controller. Manifests are built for each version so, if you are just pulling this with the intention to run it, you can just pull cannable/unifi:6.2.25, or latest.
 
 * NOTE: 32-bit ARM builds are broken right now.
+
 ## Old Tags/Images
 
 I ended up doing a large refactoring of how this container works and how I build images. The first thing was to ditch s6 because I wasn't actually using it for anything and it was adding unnecessary complexity. Besides, I'd rather have docker get stderr/stdout from java.
