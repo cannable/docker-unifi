@@ -33,6 +33,7 @@ else
     echo Downloading version ${UNIFI_VERSION}...
     curl -o /data/unifi_sysvinit_all.deb $url
     apt-get --no-install-recommends -y install /data/unifi_sysvinit_all.deb
+    rm -f /data/unifi_sysvinit_all.deb
 fi
 
 
