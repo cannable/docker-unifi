@@ -1,7 +1,6 @@
 FROM debian:stretch
 
 ARG UNIFI_VERSION
-ARG S6_VERSION=2.2.0.3
 
 ENV NAME unifi
 ENV JVM_MAXHEAP=1024m
@@ -10,13 +9,10 @@ VOLUME ["/usr/lib/unifi/data", \
         "/usr/lib/unifi/logs"]
 
 COPY ["./data", "/data"]
-
 RUN ["/bin/bash", "/data/build-unifi.sh"]
 
 COPY ["./init.sh", "/init.sh"]
 
-COPY ["./overrides", "/data/overrides"]
-RUN ["/bin/bash", "/data/build-overrides.sh"]
 
 # Ports stolen from here:
 # https://help.ubnt.com/hc/en-us/articles/218506997-UniFi-Ports-Used
