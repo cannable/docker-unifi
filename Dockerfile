@@ -12,7 +12,8 @@ VOLUME ["/usr/lib/unifi/data", \
 COPY ["./data", "/data"]
 
 RUN ["/bin/bash", "/data/build-unifi.sh"]
-RUN ["/bin/bash", "/data/build-s6.sh"]
+
+COPY ["./init.sh", "/init.sh"]
 
 COPY ["./overrides", "/data/overrides"]
 RUN ["/bin/bash", "/data/build-overrides.sh"]
@@ -41,4 +42,4 @@ EXPOSE "3478/udp" \
        "10001/udp" \
        "1900/udp"
 
-ENTRYPOINT ["/init"]
+ENTRYPOINT ["/bin/bash", "/init.sh"]
