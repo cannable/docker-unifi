@@ -2,7 +2,19 @@
 
 This is what it sounds like - the Unifi Controller in a Docker container.
 
-## Heads Up - Mongodb 3.6
+## News, of Sorts
+
+### Potentially Breaking Build Change
+
+Ubiquiti changed their URL paths for v7.x controller packages to include some form of hash in the containing directory. Wonderful.
+
+I want to track what's current, but also still allow someone to successfully build images for 6.x and older (because Ubiquiti software releases can be an adventure and, if you're reading this, you almost certainly know what I'm talking about). Therefore, I intend to:
+
+* Tag the last commit that works for 6.x and probably lower. `6.x-or-older` is your friend. Ish - anything older than 6.5.55 has potentially catastrophic log4j vulnerabilities.
+* Apply a band-aid to make building 7.x images work. I'm going to drop support for a scenario where you don't pass a UNIFI_VERSION build arg to the Dockerfile because none of scripts do that. Further, you will have to also pass UNIFI_PKG_URL when building.
+* Consider long-term solutions. I don't really want to maintain some form of transformation table.
+
+### Heads Up - Mongodb 3.6
 
 In the event I am not the only one using this image, you will need to work around some annoyances I am creating. I am now building these images off of Ubuntu 18.04, which has mongodb 3.6.x (versus the 3.2.x in Debian Stretch). The reason is simple - 3.2 isn't supported by the main project anymore, and Ubiquiti supports 3.6 now.
 

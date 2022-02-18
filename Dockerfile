@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
 
-ARG UNIFI_VERSION
+ARG UNIFI_VERSION=7.0.21
+ARG UNIFI_PKG_URL=https://dl.ui.com/unifi/7.0.21-ebd087e2ad/unifi_sysvinit_all.deb
 
 ENV NAME unifi
 ENV JVM_MAXHEAP=1024m
