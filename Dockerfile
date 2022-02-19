@@ -1,7 +1,10 @@
 FROM ubuntu:18.04
 
+# NOTE: To build this container image, you must have the Unifi controller
+# package downloaded somewhere already. Use ./util/build.sh to avoid this.
+
 ARG UNIFI_VERSION=7.0.21
-ARG UNIFI_PKG_URL=https://dl.ui.com/unifi/7.0.21-ebd087e2ad/unifi_sysvinit_all.deb
+ARG UNIFI_PKG_PATH=./cache/7.0.21-unifi_sysvinit_all.deb
 
 ENV NAME unifi
 ENV JVM_MAXHEAP=1024m
@@ -9,10 +12,14 @@ ENV JVM_MAXHEAP=1024m
 VOLUME ["/usr/lib/unifi/data", \
         "/usr/lib/unifi/logs"]
 
-COPY ["./data", "/data"]
-RUN ["/bin/bash", "/data/build-unifi.sh"]
+COPY ${UNIFI_PKG_PATH} /unifi_sysvinit_all.deb
+COPY ./init.sh /init.sh
 
-COPY ["./init.sh", "/init.sh"]
+RUN apt-get update && \
+        apt-get --no-install-recommends -y install openjdk-8-jre-headless /unifi_sysvinit_all.deb && \
+        rm -f /unifi_sysvinit_all.deb && \
+        apt-get -y clean && \
+        rm -rf /var/lib/apt/lists/*
 
 
 # Ports stolen from here:

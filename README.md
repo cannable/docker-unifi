@@ -4,32 +4,12 @@ This is what it sounds like - the Unifi Controller in a Docker container.
 
 ## News, of Sorts
 
-### Potentially Breaking Build Change
+### New Build Behaviour
 
-Ubiquiti changed their URL paths for v7.x controller packages to include some form of hash in the containing directory. Wonderful.
-
-I want to track what's current, but also still allow someone to successfully build images for 6.x and older (because Ubiquiti software releases can be an adventure and, if you're reading this, you almost certainly know what I'm talking about). Therefore, I intend to:
-
-* Tag the last commit that works for 6.x and probably lower. `6.x-or-older` is your friend. Ish - anything older than 6.5.55 has potentially catastrophic log4j vulnerabilities.
-* Apply a band-aid to make building 7.x images work. I'm going to drop support for a scenario where you don't pass a UNIFI_VERSION build arg to the Dockerfile because none of scripts do that. Further, you will have to also pass UNIFI_PKG_URL when building.
-* Consider long-term solutions. I don't really want to maintain some form of transformation table.
-
-### Heads Up - Mongodb 3.6
-
-In the event I am not the only one using this image, you will need to work around some annoyances I am creating. I am now building these images off of Ubuntu 18.04, which has mongodb 3.6.x (versus the 3.2.x in Debian Stretch). The reason is simple - 3.2 isn't supported by the main project anymore, and Ubiquiti supports 3.6 now.
-
-Starting with builds after 6.2.25, you're likely going to have issues doing an in-place upgrade (it exploded for me when I tested it, for example). I have ideas as to why, and maybe how to fix them properly, but here's the easiest workaround: do a manual backup first.
-
-A special tagged image exists for doing the upgrade (6.2.25-mongodb36). Docker will only keep this image around a few months, so you should plan around migrating soon. If you're not ready just yet, switch to 6.2.25-mongodb32. To migrate, do the following:
-
-1. Perform a manual backup from the Unifi console
-1. If you replaced the Unifi certificate, back up your custom keystore file
-1. Delete your existing container and volumes
-1. Run the new container (ex. using the 6.2.25-mongodb36 tag)
-1. Upload your backup file to the installer
-1. Wait for the restore to finish, then log in and check on your sites
-1. Restore your custom keystore, if you had one
-1. Do a regular backup of your controller
+To speed up cross-architecture builds and reduce bandwidth consumed, this image
+expects you to supply the Debian package for the Unifi controller. This only
+matters if you build the image yourself without using ./util/build.sh. FYI -
+that build script will now create a cache directory.
 
 ## Tags
 
@@ -39,33 +19,29 @@ I build images for three architectures:
 | -------- | ---------- |
 | amd64 | amd64 |
 | aarch64 | arm64 |
-| ARMv7 | arm * |
 
-Each platform's images are tagged with the convention prefix-version, so arm64-6.2.25 would be the aarch64 build for the v6.2.25 controller. Manifests are built for each version so, if you are just pulling this with the intention to run it, you can just pull cannable/unifi:6.2.25, or latest.
-
-* NOTE: 32-bit ARM builds are broken right now.
-
-## Old Tags/Images
-
-I ended up doing a large refactoring of how this container works and how I build images. The first thing was to ditch s6 because I wasn't actually using it for anything and it was adding unnecessary complexity. Besides, I'd rather have docker get stderr/stdout from java.
-
-The other major thing is why I added this section - I am building these with buildah now. Due to a number of things, including some general laziness on my end, the tag prefix for 32-bit arm has changed from "armhf" to just "arm". I've also managed to break the build on that platform, so... yeah.
-
-I run this image off of a Pi running Photon and build these on an amd64 box, so I kind of lack a "proper" environment to test that arch. Mongodb uses a different DB engine too and switching to 64 bit is "interesting" (if you happen to do that, the path of least resistance is to save a backup from the Maintenance area in the Unifi console, nuke your container, then start a new 64-bit one up and restore the backup). It's possible some older builds are also broken and I didn't spot it. I probably should make my build scripts bail if something goes wrong in apt land.
+Each platform's images are tagged with the convention prefix-version, so
+arm64-6.2.25 would be the aarch64 build for the v6.2.25 controller. Manifests
+are built for each version so, if you are just pulling this with the intention
+to run it, you can just pull cannable/unifi:6.2.25, or latest.
 
 ## Run-Time Configuration
 
 **JVM_MAXHEAP**
 
-Set this to change the Xmx value used to start Unifi. Defaults to 1024m (which is the Unifi default).
+Set this to change the Xmx value used to start Unifi. Defaults to 1024m (which
+is the Unifi default).
 
 ## Build-Time Configuration
 
 **UNIFI_VERSION**
 
-Define this to install a specific version of the controller. The latest version provided by Ubiquiti's APT repo is installed if this argument is empty. When you define this, the deb archive will be downloaded from Ubiquiti's site.
+Version of the Ubiquiti Network Application to package. Mostly used for tagging.
 
-NOTE: You must explicity pass a version number if building on aarch64 (same goes for any odd-ball platforms UBNT doesn't directly support). Ubiquiti's APT repo does not have packages or an index for this platform, even though the package we install is marked as noarch.
+**UNIFI_PKG_PATH**
+
+Path on disk (host/builder) where the Unifi Network Application's Debian package
+resides.
 
 ## Volumes
 
@@ -76,6 +52,17 @@ There are two defined in the Dockerfile. You should probably redirect these:
 
 ## Other Stuff
 
-You should consider running this container on either a macvlan or ipvlan network. This is how I run this container. Most of the required ports are exposed by default, but because I don't test all functionality in my environment, I can't guarantee something isn't horribly broken somewhere.
+You should consider running this container on either a macvlan or ipvlan
+network. This is how I run this container. Most of the required ports are
+exposed by default, but because I don't test all functionality in my
+environment, I can't guarantee something isn't horribly broken somewhere.
 
-There's room for improvement in a number of areas in this container. Most notably, logging is a bit of a mess (in that I made no effort to get it working properly). Unifi craps out trying to write log files and mongodb could use some rotation set up. Consider that the largest TODO item.
+There's room for improvement in a number of areas in this container. Most
+notably, logging is a bit of a mess (in that I made no effort to get it working
+properly). Unifi craps out trying to write log files and mongodb could use some
+rotation set up. Consider that the largest TODO item.
+
+Right now, this will only build 7.x container images. I am going to fix that
+sometime. If you want to build 6.x or older images, checkout the `6.x-or-older`
+tag. Be warned - anything older than 6.5.55 has potentially catastrophic log4j
+vulnerabilities.
