@@ -9,16 +9,15 @@
 
 
 ### Command-line Argument Handling
-if [[ $# -ne 2 ]]; then
+if [[ $# -ne 1 ]]; then
     echo Build container images
-    echo build.sh version hash
+    echo build.sh version
     exit 1
 fi
 
 version=$1
-hash=$2
 
-url="${PKG_URL_PREFIX}/${version}-${hash}/${PKG_URL_FILENAME}"
+url="${PKG_URL_PREFIX}/${version}/${PKG_URL_FILENAME}"
 cachedir="./cache"
 cachefile="${cachedir}/${version}-${PKG_URL_FILENAME}"
 
