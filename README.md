@@ -32,6 +32,21 @@ to run it, you can just pull cannable/unifi:6.2.25, or latest.
 Set this to change the Xmx value used to start Unifi. Defaults to 1024m (which
 is the Unifi default).
 
+### Secrets
+
+Added to 7.3.83 images.
+
+**UNIFI_HTTPS_KEY_FILE and UNIFI_HTTPS_CERT_FILE**
+
+Set these to the paths containing custom HTTPS private & public keys. The paths
+are inside the container and both must exist for things to work.
+
+**UNIFI_HTTPS_CACERT_FILE and UNIFI_HTTPS_CA_ALIAS**
+
+Set `UNIFI_HTTPS_CACERT_FILE` to the path to a custom CA cert that should be imported into the trust store.
+
+Set `UNIFI_HTTPS_CA_ALIAS` to the alias/name of the CA cert in the trust store. This is optional and defaults to "custom_ca" if undefined.
+
 ## Build-Time Configuration
 
 **UNIFI_VERSION**
