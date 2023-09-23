@@ -4,43 +4,26 @@ FROM ubuntu:18.04
 # package downloaded somewhere already. Use ./util/build.sh to avoid this.
 
 ARG UNIFI_VERSION=7.0.21
-ARG UNIFI_PKG_PATH=./cache/7.5.176-UniFi.unix.zip 
+ARG UNIFI_PKG_PATH=./cache/7.0.21-unifi_sysvinit_all.deb
 
 ENV NAME unifi
 ENV JVM_MAXHEAP=1024m
-ENV UNIFI_UID=102
-ENV UNIFI_GID=103
 
-COPY ${UNIFI_PKG_PATH} /UniFi.unix.zip
+VOLUME ["/usr/lib/unifi/data", \
+  "/usr/lib/unifi/logs"]
+
+COPY ${UNIFI_PKG_PATH} /unifi_sysvinit_all.deb
 COPY ./init.sh /init.sh
 
-# Install pre-reqs
 RUN apt-get update && \
-  apt-get install --no-install-recommends -y \
-  adduser \
-  apt-transport-https \
-  binutils \
-  ca-certificates \
-  coreutils \
-  curl \
-  libcap2 \
-  logrotate \
-  mongo-tools \
+  apt-get --no-install-recommends -y install \
+  ca-certificates-java \
   mongodb \
-  mongodb-server \
-  unzip && \
-  mkdir -p /etc/apt/keyrings && \
-  curl -o /etc/apt/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public && \
-  echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb bionic main" > /etc/apt/sources.list.d/adoptium.list && \
-  apt-get update && \
-  apt-get install --no-install-recommends -y temurin-17-jre && \
+  openjdk-17-jre-headless \
+  /unifi_sysvinit_all.deb && \
+  rm -f /unifi_sysvinit_all.deb && \
   apt-get -y clean && \
-  rm -rf /var/lib/apt/lists/* && \
-  mkdir -p /usr/lib && \
-  unzip /UniFi.unix.zip -d /usr/lib && \
-  mv /usr/lib/UniFi /usr/lib/unifi && \
-  mkdir -p /usr/lib/unifi/data && \
-  mkdir -p /usr/lib/unifi/logs
+  rm -rf /var/lib/apt/lists/*
 
 
 # Ports stolen from here:
@@ -67,8 +50,4 @@ EXPOSE "3478/udp" \
   "10001/udp" \
   "1900/udp"
 
-VOLUME ["/usr/lib/unifi/data", \
-  "/usr/lib/unifi/logs"]
-
 ENTRYPOINT ["/bin/bash", "/init.sh"]
-

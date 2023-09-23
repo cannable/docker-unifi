@@ -4,7 +4,16 @@ This is what it sounds like - the Unifi Controller in a Docker container.
 
 ## News, of Sorts
 
-### New Build Behaviour
+### 2023-10-23: Temurin
+
+This image now uses Eclipse Temurin from Adoptium.net and installs Unifi
+manually using the zip archive. There are now `UNIFI_UID` and `UNIFI_GID`
+environment variables that can be defined at run time to ensure file ownership
+stays consistent between restarts. The old Dockerfile has been moved to
+Dockerfile.old. If you use the old Dockerfile, beware, there may be some build
+wonkiness on arm64.
+
+### 2022-07-19: New Build Behaviour
 
 To speed up cross-architecture builds and reduce bandwidth consumed, this image
 expects you to supply the Debian package for the Unifi controller. This only
@@ -17,8 +26,8 @@ I build images for three architectures:
 
 | Platform | Tag Prefix |
 | -------- | ---------- |
-| amd64 | amd64 |
-| aarch64 | arm64 |
+| amd64    | amd64      |
+| aarch64  | arm64      |
 
 Each platform's images are tagged with the convention prefix-version, so
 arm64-6.2.25 would be the aarch64 build for the v6.2.25 controller. Manifests
@@ -32,6 +41,11 @@ to run it, you can just pull cannable/unifi:6.2.25, or latest.
 Set this to change the Xmx value used to start Unifi. Defaults to 1024m (which
 is the Unifi default).
 
+**UNIFI_UID and UNIFI_GID**
+
+Sets the unifi user's UID and GID in the container at startup. The unifi app
+directory tree will be recursively updated to reflect these at startup.
+
 ### Secrets
 
 Added to 7.3.83 images.
@@ -43,9 +57,11 @@ are inside the container and both must exist for things to work.
 
 **UNIFI_HTTPS_CACERT_FILE and UNIFI_HTTPS_CA_ALIAS**
 
-Set `UNIFI_HTTPS_CACERT_FILE` to the path to a custom CA cert that should be imported into the trust store.
+Set `UNIFI_HTTPS_CACERT_FILE` to the path to a custom CA cert that should be
+imported into the trust store.
 
-Set `UNIFI_HTTPS_CA_ALIAS` to the alias/name of the CA cert in the trust store. This is optional and defaults to "custom_ca" if undefined.
+Set `UNIFI_HTTPS_CA_ALIAS` to the alias/name of the CA cert in the trust store.
+This is optional and defaults to "custom_ca" if undefined.
 
 ## Build-Time Configuration
 
@@ -55,7 +71,7 @@ Version of the Ubiquiti Network Application to package. Mostly used for tagging.
 
 **UNIFI_PKG_PATH**
 
-Path on disk (host/builder) where the Unifi Network Application's Debian package
+Path on disk (host/builder) where the Unifi Network Application's zip archive
 resides.
 
 ## Volumes

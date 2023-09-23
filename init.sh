@@ -23,11 +23,49 @@ UNIFI_KEYSTORE_PASS=aircontrolenterprise
 JVM_OPTS=""
 JVM_OPTS="${JVM_OPTS} -Djava.awt.headless=true"
 JVM_OPTS="${JVM_OPTS} -Dfile.encoding=UTF-8"
+JVM_OPTS="${JVM_OPTS} -Dapple.awt.UIElement=true"
+JVM_OPTS="${JVM_OPTS} -Dunifi.core.enabled=false"
+JVM_OPTS="${JVM_OPTS} -Dunifi.mongodb.service.enabled=false"
 JVM_OPTS="${JVM_OPTS} -Xmx${JVM_MAXHEAP}"
+JVM_OPTS="${JVM_OPTS} -XX:+UseParallelGC"
+JVM_OPTS="${JVM_OPTS} -XX:+ExitOnOutOfMemoryError"
+JVM_OPTS="${JVM_OPTS} -XX:+CrashOnOutOfMemoryError"
+JVM_OPTS="${JVM_OPTS} -XX:ErrorFile=/usr/lib/unifi/logs/hs_err_pid%p.log"
+JVM_OPTS="${JVM_OPTS} -Xlog:gc:logs/gc.log:time:filecount=2,filesize=5M"
 JVM_OPTS="${JVM_OPTS} -Dunifi.datadir=${UNIFI_DATADIR}"
 JVM_OPTS="${JVM_OPTS} -Dunifi.rundir=${UNIFI_RUNDIR}"
 JVM_OPTS="${JVM_OPTS} -Dunifi.logdir=${UNIFI_LOGDIR}"
 JVM_OPTS="${JVM_OPTS} -cp /usr/share/java/commons-daemon.jar:/usr/lib/unifi/lib/ace.jar"
+JVM_OPTS="${JVM_OPTS} --add-opens java.base/java.lang=ALL-UNNAMED"
+JVM_OPTS="${JVM_OPTS} --add-opens java.base/java.time=ALL-UNNAMED"
+JVM_OPTS="${JVM_OPTS} --add-opens java.base/sun.security.util=ALL-UNNAMED"
+JVM_OPTS="${JVM_OPTS} --add-opens java.base/java.io=ALL-UNNAMED"
+JVM_OPTS="${JVM_OPTS} --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED"
+
+### User Check
+
+grep unifi /etc/passwd
+
+if [ $? -gt 0 ]; then
+  # Unifi user doesn't exist, create it.
+
+  # We can assume UNIFI_UID and UNIFI_GID are defined because they're ENVs in
+  # the Dockerfile.
+
+  addgroup \
+    --system \
+    --gid "$UNIFI_GID" \
+    unifi
+
+  adduser \
+    --system \
+    --home /usr/lib/unifi \
+    --no-create-home \
+    --uid "$UNIFI_UID" \
+    --gid "$UNIFI_GID" \
+    --disabled-password \
+    --quiet unifi
+fi
 
 
 ### Keystore "Stuff" for Secrets
@@ -93,4 +131,5 @@ done
 
 ### Start Unifi
 
+cd /usr/lib/unifi
 su -s /bin/bash -c "java ${JVM_OPTS} -jar /usr/lib/unifi/lib/ace.jar start" unifi
