@@ -10,7 +10,6 @@
 
 IMAGE="cannable/unifi"
 ARCHES=(amd64 arm64)
-VERSION=7.5.176
 
 
 # ------------------------------------------------------------------------------
@@ -20,6 +19,7 @@ VERSION=7.5.176
 printUsage() {
     echo ""
     echo "Usage: $0 unifi_version"
+    echo "ex.    $0 7.5.176"
     echo ""
 }
 
@@ -39,7 +39,7 @@ UNIFI_VERSION=$1
 # 'Main'
 
 # Build is hard-coded to buildah for now
-for arch in ${ARCHES[@]}; do
-  ./util/build.sh -b -a $arch
+for ARCH in ${ARCHES[@]}; do
+  ./util/build.sh -b -a $ARCH -u $UNIFI_VERSION
 done
 
