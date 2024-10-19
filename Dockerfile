@@ -1,10 +1,10 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 # NOTE: To build this container image, you must have the Unifi controller
 # package downloaded somewhere already. Use ./util/build.sh to avoid this.
 
-ARG UNIFI_VERSION=7.0.21
-ARG UNIFI_PKG_PATH=./cache/7.5.176-UniFi.unix.zip 
+ARG UNIFI_VERSION=8.1.127
+ARG UNIFI_PKG_PATH=./cache/8.1.127-UniFi.unix.zip 
 
 ENV NAME unifi
 ENV JVM_MAXHEAP=1024m
@@ -23,17 +23,17 @@ RUN apt-get update && \
   ca-certificates \
   coreutils \
   curl \
+  gnupg \
   libcap2 \
   logrotate \
-  mongo-tools \
-  mongodb \
-  mongodb-server \
   unzip && \
   mkdir -p /etc/apt/keyrings && \
   curl -o /etc/apt/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public && \
-  echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb bionic main" > /etc/apt/sources.list.d/adoptium.list && \
+  echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb jammy main" > /etc/apt/sources.list.d/adoptium.list && \
+  curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor && \
+  echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" > /etc/apt/sources.list.d/mongodb-org-7.0.list && \
   apt-get update && \
-  apt-get install --no-install-recommends -y temurin-17-jre && \
+  apt-get install --no-install-recommends -y temurin-17-jre mongodb-org && \
   apt-get -y clean && \
   rm -rf /var/lib/apt/lists/* && \
   mkdir -p /usr/lib && \
