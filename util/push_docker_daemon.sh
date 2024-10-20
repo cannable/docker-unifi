@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. ./env_build.sh
+IMAGE="cannable/unifi"
+ARCHES=(amd64 arm64)
 
 if [[ $# -ne 1 ]]; then
     echo Push image to local Docker

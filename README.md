@@ -4,6 +4,10 @@ This is what it sounds like - the Unifi Controller in a Docker container.
 
 ## News, of Sorts
 
+### 2024-10-20: mongodb 7
+
+Upgraded to mongodb 7 and Ubuntu 22.04.
+
 ### 2023-10-23: Temurin
 
 This image now uses Eclipse Temurin from Adoptium.net and installs Unifi
